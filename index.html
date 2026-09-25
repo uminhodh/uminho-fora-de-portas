@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UMinho Fora de Portas — Protótipo</title>
+<style>
+:root{
+  --bg:#f5f7f7;
+  --surface:#ffffff;
+  --text:#17323d;
+  --muted:#63757d;
+  --line:#d9e2e5;
+  --primary:#005a70;
+  --primary-dark:#003f50;
+  --accent:#d9a54a;
+  --soft:#eaf2f4;
+  --radius:12px;
+}
+
+.more-info{
+  margin-top:1rem;
+  padding-top:1rem;
+  border-top:1px solid var(--line);
+}
+
+.participant-cards .card{
+  display:flex;
+  flex-direction:column;
+}
+
+.participant-cards .more-info-button{
+  margin-top:auto;
+  align-self:flex-start;
+}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.nav{max-width:1180px;margin:auto;padding:14px 22px;display:flex;align-items:center;gap:18px}
+.brand{font-weight:800;color:var(--primary);margin-right:auto}
+.nav a,.nav button.linkbtn{border:0;background:none;padding:8px 6px;color:var(--text)}
+.nav .cta{background:var(--primary);color:#fff;border:1px solid var(--primary);border-radius:8px;padding:9px 14px;font-weight:700}
+.nav .ghost{background:#fff;color:var(--primary);border:1px solid var(--primary);border-radius:8px;padding:9px 14px;font-weight:700}
+main{min-height:calc(100vh - 70px)}
+.page{display:none}
+.page.active{display:block}
+.wrap{max-width:1180px;margin:auto;padding:40px 22px}
+.narrow{max-width:860px}
+.hero{background:var(--soft);padding:72px 0}
+.hero h1{font-size:clamp(42px,6vw,72px);line-height:1.02;margin:0 0 18px;letter-spacing:-0.04em}
+.hero p{font-size:20px;line-height:1.55;max-width:760px;color:var(--muted)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{border:1px solid var(--primary);background:var(--primary);color:#fff;border-radius:8px;padding:11px 16px;font-weight:700}
+.btn.secondary{background:#fff;color:var(--primary)}
+.btn.subtle{background:#fff;color:var(--text);border-color:var(--line)}
+section{padding:54px 0}
+.section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:22px}
+.section-head h2{font-size:32px;margin:0}
+.section-head p{max-width:650px;color:var(--muted);margin:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card h3{margin-top:0}
+.card p{color:var(--muted);line-height:1.55}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.step{border-top:3px solid var(--accent);padding-top:12px}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--primary)}
+.form-shell{background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px}
+.form-shell h1{margin-top:0}
+.form-section{padding:24px 0;border-top:1px solid var(--line)}
+.form-section:first-of-type{border-top:0}
+.form-section h2{font-size:22px;margin:0 0 16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-weight:700}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #b9c9ce;border-radius:8px;background:#fff;color:var(--text)}
+textarea{min-height:110px;resize:vertical}
+.hint{font-size:13px;color:var(--muted);font-weight:400}
+.checks{display:flex;flex-direction:column;gap:10px}
+.checks label{font-weight:400;display:flex;gap:8px;align-items:flex-start}
+.checks input{width:auto;margin-top:3px}
+.profile-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.profile-card{border:1px solid var(--line);background:#fff;border-radius:10px;padding:18px;text-align:left}
+.profile-card.active{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,90,112,.1);background:#f8fcfd}
+.dashboard{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 68px)}
+.sidebar{background:#fff;border-right:1px solid var(--line);padding:24px}
+.sidebar h3{margin-top:0}
+.sidebar button{display:block;width:100%;text-align:left;border:0;background:none;padding:10px 0;color:var(--text)}
+.sidebar button.active{color:var(--primary);font-weight:800}
+.content{padding:34px}
+.mock-row{display:flex;justify-content:space-between;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:12px}
+.meta{font-size:13px;color:var(--muted)}
+.readonly{background:#f8fafb;border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+.readonly strong{display:block;margin-bottom:4px}
+.choice3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.choice{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff}
+.choice input{width:auto}
+.notice{background:#fff8e9;border-left:4px solid var(--accent);padding:14px 16px;border-radius:8px;color:#5d513b}
+.demo-box{margin-top:20px;border-top:1px dashed var(--line);padding-top:20px}
+.success{display:none;margin-top:14px;background:#eef8f1;border:1px solid #c7e4cf;padding:12px 14px;border-radius:8px}
+footer{padding:28px 22px;color:var(--muted);border-top:1px solid var(--line);background:#fff}
+.hidden{display:none!important}
+@media(max-width:900px){
+  .grid3,.steps,.profile-picks,.choice3{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .dashboard{grid-template-columns:1fr}
+  .sidebar{border-right:0;border-bottom:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <a href="#" class="brand" data-page="home">UMinho Fora de Portas</a>
+    <a href="#" data-page="home">Sobre</a>
+    <a href="#" data-page="home">Como funciona</a>
+    <a href="#" data-page="home">Recursos</a>
+    <a href="#" data-page="home">Projetos</a>
+    <button class="ghost" data-page="login">Entrar</button>
+    <button class="cta" data-page="register">Registar</button>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="page active">
+    <div class="hero">
+      <div class="wrap">
+        <div class="kicker">Universidade do Minho · Protótipo</div>
+        <h1>UMinho Fora de Portas</h1>
+        <p>Uma plataforma para aproximar a Universidade do Minho de organizações da comunidade através de projetos de Aprendizagem-Serviço, voluntariado e outras formas de colaboração.</p>
+        <div class="actions">
+          <button class="btn secondary" data-page="register">Registar</button>
+          <button class="btn" data-page="login">Entrar</button>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Quem participa</div>
+            <h2>Uma plataforma, diferentes formas de participar</h2>
+          </div>
+        </div>
+        <div class="grid3 participant-cards">
+          <div class="card">
+            <h3>Estudantes</h3>
+            <p>Consultam oportunidades de voluntariado disponibilizadas por organizações parceiras.</p>
+          
+            <button class="btn secondary more-info-button">
+              Mais informações
+            </button>
+          
+            <div class="more-info hidden">
+              <p>
+                Os estudantes podem consultar oportunidades públicas de
+                voluntariado e conhecer as organizações, atividades,
+                períodos e condições de participação.
+              </p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Docentes</h3>
+          
+            <p>
+              Consultam necessidades apresentadas por entidades parceiras
+              e transformam-nas em projetos associados às suas unidades curriculares.
+            </p>
+          
+            <button class="btn secondary more-info-button">
+              Mais informações
+            </button>
+          
+            <div class="more-info hidden">
+              <p>
+                Os docentes podem selecionar uma necessidade, associá-la
+                a uma unidade curricular e desenvolver um projeto de
+                Aprendizagem-Serviço na modalidade simulada, mediada ou imersiva.
+              </p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Organizações parceiras</h3>
+          
+            <p>
+              Entidades sem fins lucrativos apresentam necessidades e oportunidades
+              de voluntariado. Empresas podem disponibilizar recursos, formação ou
+              outras formas de apoio.
+            </p>
+          
+            <button class="btn secondary more-info-button">
+              Mais informações
+            </button>
+          
+            <div class="more-info hidden">
+              <p>
+                As entidades sem fins lucrativos podem apresentar necessidades
+                e oportunidades de voluntariado. As empresas podem disponibilizar
+                apoios, recursos ou formação para iniciativas da comunidade.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fff">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Fluxo</div>
+            <h2>Como funciona</h2>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step"><strong>1. Necessidade</strong><p>A entidade identifica uma necessidade real.</p></div>
+          <div class="step"><strong>2. Seleção</strong><p>O docente consulta e seleciona uma necessidade.</p></div>
+          <div class="step"><strong>3. Projeto</strong><p>Associa-a a uma unidade curricular e cria um projeto.</p></div>
+          <div class="step"><strong>4. Desenvolvimento</strong><p>O projeto é desenvolvido com a modalidade de ApS escolhida.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Projetos</div>
+            <h2>Exemplos públicos</h2>
+          </div>
+          <p>Espaço reservado para projetos aprovados e publicados.</p>
+        </div>
+        <div class="grid3">
+          <div class="card"><h3>Literacia digital para pessoas idosas</h3><p>Projeto demonstrativo · ApS mediada</p></div>
+          <div class="card"><h3>Comunicação para associação local</h3><p>Projeto demonstrativo · ApS simulada</p></div>
+          <div class="card"><h3>Diagnóstico comunitário</h3><p>Projeto demonstrativo · ApS imersiva</p></div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section id="login" class="page">
+    <div class="wrap narrow">
+      <div class="form-shell">
+        <div class="kicker">Acesso</div>
+        <h1>Entrar</h1>
+        <div class="form-grid">
+          <div class="field full">
+            <label>Email</label>
+            <input type="email" placeholder="nome@uminho.pt">
+          </div>
+          <div class="field full">
+            <label>Palavra-passe</label>
+            <input type="password" placeholder="••••••••">
+          </div>
+          <div class="field full checks">
+            <label><input type="checkbox"> Manter sessão iniciada</label>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn">Entrar</button>
+          <button class="btn secondary" data-page="register">Ainda não tem conta? Registar</button>
+        </div>
+        <div class="demo-box">
+          <div class="kicker">Apenas para demonstração</div>
+          <p class="hint">Use estes atalhos para abrir diretamente os dois perfis do protótipo.</p>
+          <div class="actions">
+            <button class="btn subtle" data-page="teacher-dashboard">Entrar como docente</button>
+            <button class="btn subtle" data-page="org-dashboard">Entrar como organização</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="register" class="page">
+    <div class="wrap narrow">
+      <div class="form-shell">
+        <div class="kicker">Registo</div>
+        <h1>Criar conta</h1>
+        <p class="hint">Selecione o perfil. Os campos apresentados abaixo mudam de forma dinâmica.</p>
+
+        <div class="profile-picks">
+          <button class="profile-card active" data-profile="student"><strong>Estudante</strong><br><span class="hint">Conta individual UMinho.</span></button>
+          <button class="profile-card" data-profile="teacher"><strong>Docente</strong><br><span class="hint">Conta institucional UMinho.</span></button>
+          <button class="profile-card" data-profile="org"><strong>Organização parceira</strong><br><span class="hint">Entidade ou empresa.</span></button>
+        </div>
+
+        <div id="reg-student" class="reg-panel">
+          <div class="form-section">
+            <h2>Dados do estudante</h2>
+            <div class="form-grid">
+              <div class="field"><label>Nome completo *</label><input></div>
+              <div class="field"><label>Email institucional UMinho *</label><input type="email"></div>
+              <div class="field"><label>Número de aluno *</label><input></div>
+              <div class="field"><label>Curso *</label><input></div>
+              <div class="field">
+                <label>Ano curricular</label>
+                <select>
+                  <option value="">Selecione</option>
+                  <option>1.º ano</option>
+                  <option>2.º ano</option>
+                  <option>3.º ano</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Unidade Orgânica *</label>
+                <select>
+                  <option value="">Selecione</option>
+                  <option>Escola de Arquitetura, Arte e Design (EAAD)</option>
+                  <option>Escola de Ciências (EC)</option>
+                  <option>Escola de Direito (ED)</option>
+                  <option>Escola de Economia, Gestão e Ciência Política (EEG)</option>
+                  <option>Escola de Engenharia (EENG)</option>
+                  <option>Escola de Letras, Artes e Ciências Humanas (ELACH)</option>
+                  <option>Escola de Medicina (EMed)</option>
+                  <option>Escola de Psicologia (EPsi)</option>
+                  <option>Escola Superior de Enfermagem (ESE)</option>
+                  <option>Instituto de Ciências Sociais (ICS)</option>
+                  <option>Instituto de Educação (IE)</option>
+                  <option>Instituto de Investigação I3Bs (I3Bs)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Ciclo *</label>
+                <select>
+                  <option value="">Selecione</option>
+                  <option>Licenciatura</option>
+                  <option>Mestrado</option>
+                  <option>Doutoramento</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <h2>Conta</h2>
+            <div class="form-grid">
+              <div class="field"><label>Palavra-passe *</label><input type="password"></div>
+              <div class="field"><label>Confirmar palavra-passe *</label><input type="password"></div>
+              <div class="field full checks">
+                <label><input type="checkbox"> Tenho interesse em oportunidades de voluntariado autónomo.</label>
+                <label><input type="checkbox"> Li e aceito a Informação sobre Privacidade e Tratamento de Dados. *</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="reg-teacher" class="reg-panel hidden">
+          <div class="form-section">
+            <h2>Dados do docente</h2>
+            <div class="form-grid">
+              <div class="field"><label>Nome completo *</label><input></div>
+              <div class="field"><label>Email institucional UMinho *</label><input type="email"></div>
+              <div class="field">
+                <label>Unidade Orgânica *</label>
+                <select>
+                  <option value="">Selecione</option>
+                  <option>Escola de Arquitetura, Arte e Design (EAAD)</option>
+                  <option>Escola de Ciências (EC)</option>
+                  <option>Escola de Direito (ED)</option>
+                  <option>Escola de Economia, Gestão e Ciência Política (EEG)</option>
+                  <option>Escola de Engenharia (EENG)</option>
+                  <option>Escola de Letras, Artes e Ciências Humanas (ELACH)</option>
+                  <option>Escola de Medicina (EMed)</option>
+                  <option>Escola de Psicologia (EPsi)</option>
+                  <option>Escola Superior de Enfermagem (ESE)</option>
+                  <option>Instituto de Ciências Sociais (ICS)</option>
+                  <option>Instituto de Educação (IE)</option>
+                  <option>Instituto de Investigação I3Bs (I3Bs)</option>
+                </select>
+              </div>
+             
+              <div class="field"><label>Unidade / centro</label><input></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <h2>Conta</h2>
+            <div class="form-grid">
+              <div class="field"><label>Palavra-passe *</label><input type="password"></div>
+              <div class="field"><label>Confirmar palavra-passe *</label><input type="password"></div>
+              <div class="field full checks"><label><input type="checkbox"> Li e aceito a Informação sobre Privacidade e Tratamento de Dados. *</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="reg-org" class="reg-panel hidden">
+          <div class="form-section">
+            <h2>Tipo de organização</h2>
+            <div class="field">
+              <label>Tipo de organização *</label>
+              <select>
+                <option>Entidade sem fins lucrativos</option>
+                <option>Empresa / organização comercial</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-section">
+            <h2>Organização</h2>
+            <div class="form-grid">
+              <div class="field"><label>Nome da organização *</label><input></div>
+              <div class="field"><label>Localidade / concelho *</label><input></div>
+              <div class="field full"><label>Breve descrição da organização *</label><textarea></textarea><span class="hint">Apresente, em 2–3 linhas, a missão e as principais atividades da organização.</span></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <h2>Pessoa de contacto</h2>
+            <div class="form-grid">
+              <div class="field"><label>Nome *</label><input></div>
+              <div class="field"><label>Função na organização *</label><input></div>
+              <div class="field"><label>Email *</label><input type="email"></div>
+              <div class="field"><label>Telefone</label><input></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <h2>Conta</h2>
+            <div class="form-grid">
+              <div class="field"><label>Palavra-passe *</label><input type="password"></div>
+              <div class="field"><label>Confirmar palavra-passe *</label><input type="password"></div>
+              <div class="field full checks">
+                <label><input type="checkbox"> Confirmo que estou autorizado a representar esta organização. *</label>
+                <label><input type="checkbox"> Li e aceito a Informação sobre Privacidade e Tratamento de Dados. *</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="fake-create" class="btn">Criar conta</button>
+        </div>
+        <div id="create-success" class="success">Conta de demonstração criada. Nenhum dado foi guardado.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="teacher-dashboard" class="page">
+    <div class="dashboard">
+      <aside class="sidebar">
+        <h3>Área do Docente</h3>
+        <button class="active">Necessidades</button>
+        <button>Meus projetos</button>
+        <button>Outputs</button>
+        <button>Publicações</button>
+        <button data-page="home">Sair</button>
+      </aside>
+      <div class="content">
+        <div class="section-head">
+          <div><div class="kicker">Docente</div><h2>Necessidades disponíveis</h2></div>
+        </div>
+
+        <div class="mock-row">
+          <div>
+            <strong>Promover a literacia digital de pessoas idosas</strong>
+            <div class="meta">Associação Comunitária de Braga · ODS 4 · ODS 10 · contacto pontual</div>
+          </div>
+          <button class="btn subtle" id="open-need">Ver necessidade</button>
+        </div>
+        <div class="mock-row">
+          <div>
+            <strong>Melhorar a comunicação institucional</strong>
+            <div class="meta">Associação Cultural do Minho · ODS 11 · sem contacto direto</div>
+          </div>
+          <button class="btn subtle">Ver necessidade</button>
+        </div>
+        <div class="mock-row">
+          <div>
+            <strong>Desenvolver atividades de inclusão comunitária</strong>
+            <div class="meta">Rede Social Local · ODS 10 · receção de estudantes</div>
+          </div>
+          <button class="btn subtle">Ver necessidade</button>
+        </div>
+
+        <div id="need-detail" class="form-shell hidden" style="margin-top:20px">
+          <div class="kicker">Necessidade selecionada</div>
+          <h2>Promover a literacia digital de pessoas idosas</h2>
+          <div class="readonly"><strong>Organização</strong>Associação Comunitária de Braga</div>
+          <div class="readonly"><strong>Descrição</strong>Apoiar pessoas idosas no desenvolvimento de competências digitais para tarefas do quotidiano.</div>
+          <div class="readonly"><strong>Beneficiários</strong>Pessoas idosas da comunidade local.</div>
+          <div class="readonly"><strong>Resultado esperado</strong>Maior autonomia no uso de serviços digitais básicos.</div>
+          <div class="actions">
+            <button class="btn" data-page="teacher-form">Criar projeto a partir desta necessidade</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="teacher-form" class="page">
+    <div class="wrap narrow">
+      <div class="form-shell">
+        <div class="kicker">Docente</div>
+        <h1>Criar projeto a partir de uma necessidade</h1>
+
+        <div class="form-section">
+          <h2>1. Necessidade selecionada</h2>
+          <div class="readonly"><strong>Organização</strong>Associação Comunitária de Braga</div>
+          <div class="readonly"><strong>Título</strong>Promover a literacia digital de pessoas idosas</div>
+          <div class="readonly"><strong>Descrição</strong>Apoiar pessoas idosas no desenvolvimento de competências digitais para tarefas do quotidiano.</div>
+          <div class="readonly"><strong>Beneficiários</strong>Pessoas idosas da comunidade local.</div>
+          <div class="readonly"><strong>Resultado esperado</strong>Maior autonomia digital.</div>
+          <div class="readonly"><strong>Tipo de apoio pretendido</strong>Formação ou capacitação; intervenção educativa ou comunitária.</div>
+          <div class="readonly"><strong>ODS</strong>ODS 4; ODS 10</div>
+          <div class="readonly"><strong>Disponibilidade</strong>Contacto pontual com estudantes.</div>
+          <div class="readonly"><strong>Recursos disponibilizados</strong>Sala, materiais institucionais e apoio de um técnico.</div>
+          <div class="readonly"><strong>Recursos adicionais necessários</strong>Equipamentos e software/licenças.</div>
+          <div class="readonly"><strong>Disponibilidade temporal</strong>2.º semestre.</div>
+        </div>
+
+        <div class="form-section">
+          <h2>2. Enquadramento académico</h2>
+          <div class="form-grid">
+            <div class="field"><label>Unidade curricular *</label><input value="Comunicação Digital"></div>
+            <div class="field"><label>Curso *</label><input value="Licenciatura em Comunicação"></div>
+            <div class="field"><label>Ciclo de estudos</label><input value="1.º ciclo"></div>
+            <div class="field"><label>Ano curricular</label><input value="2.º ano"></div>
+            <div class="field"><label>Semestre *</label><select><option>2.º semestre</option><option>1.º semestre</option></select></div>
+            <div class="field"><label>Número de estudantes envolvidos *</label><input type="number" value="24"></div>
+            <div class="field"><label>Duração do projeto em semanas *</label><input type="number" value="6"></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>3. Resultados de aprendizagem</h2>
+          <div class="field full"><label>Resultados de aprendizagem da UC *</label><textarea>Aplicar princípios de comunicação digital em contextos reais; desenvolver recursos adequados a públicos específicos.</textarea></div>
+          <div class="field full"><label>Conteúdos / competências mobilizados</label><textarea></textarea></div>
+        </div>
+
+        <div class="form-section">
+          <h2>4. Modalidade de Aprendizagem-Serviço</h2>
+          <div class="choice3">
+            <label class="choice"><input type="radio" name="aps"> <strong>ApS simulada</strong><p class="hint">Sem contacto direto com a entidade.</p></label>
+            <label class="choice"><input type="radio" name="aps" checked> <strong>ApS mediada</strong><p class="hint">Contacto pontual e organizado.</p></label>
+            <label class="choice"><input type="radio" name="aps"> <strong>ApS imersiva</strong><p class="hint">Contacto direto e continuado.</p></label>
+          </div>
+          <div class="actions"><button id="compare-ai" class="btn secondary">Comparar modalidades com apoio de IA</button></div>
+          <div id="ai-compare" class="hidden">
+            <div class="grid3" style="margin-top:14px">
+              <div class="card"><h3>Simulada</h3><p>Usar briefing e materiais fornecidos pela entidade, sem contacto direto.</p></div>
+              <div class="card"><h3>Mediada</h3><p>Briefing inicial e feedback final da entidade.</p></div>
+              <div class="card"><h3>Imersiva</h3><p>Visitas e contacto continuado com participantes.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>5. Estrutura do projeto</h2>
+          <div class="form-grid">
+            <div class="field full"><label>Título do projeto *</label><input value="Oficinas de literacia digital"></div>
+            <div class="field full"><label>Questão ou desafio central</label><textarea></textarea></div>
+            <div class="field full"><label>Objetivos do projeto *</label><textarea></textarea></div>
+            <div class="field full"><label>Atividades previstas *</label><textarea></textarea></div>
+            <div class="field full"><label>Produto ou serviço a desenvolver *</label><textarea></textarea></div>
+            <div class="field full"><label>Resultados esperados</label><textarea></textarea></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>6. Participação da entidade</h2>
+          <div class="form-grid">
+            <div class="field"><label>Momentos de contacto previstos</label><textarea></textarea></div>
+            <div class="field"><label>Forma de participação da entidade</label><textarea></textarea></div>
+            <div class="field"><label>Pessoa de contacto</label><input value="Ana Martins"></div>
+            <div class="field"><label>Local das atividades</label><input></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>7. Avaliação</h2>
+          <div class="form-grid">
+            <div class="field full"><label>Como serão avaliadas as aprendizagens?</label><textarea></textarea></div>
+            <div class="field"><label>Evidências / produtos considerados</label><textarea></textarea></div>
+            <div class="field"><label>Instrumentos de avaliação</label><textarea></textarea></div>
+            <div class="field full"><label>Reflexão dos estudantes</label><textarea></textarea></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>8. Calendário</h2>
+          <div class="form-grid">
+            <div class="field"><label>Data prevista de início</label><input type="date"></div>
+            <div class="field"><label>Data prevista de conclusão</label><input type="date"></div>
+            <div class="field full"><label>Principais momentos / etapas</label><textarea></textarea></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>9. ODS</h2>
+          <div class="checks">
+            <label><input type="checkbox" checked> ODS 4 — Educação de Qualidade</label>
+            <label><input type="checkbox" checked> ODS 10 — Reduzir as Desigualdades</label>
+            <label><input type="checkbox"> ODS 11 — Cidades e Comunidades Sustentáveis</label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>10. Estado</h2>
+          <div class="form-grid">
+            <div class="field"><label>Estado do projeto</label>
+              <select><option>Rascunho</option><option>Em validação</option><option>Aprovado</option><option>Em curso</option><option>Concluído</option></select>
+            </div>
+            <div class="field checks"><label><input type="checkbox"> Tornar ficha do projeto pública</label></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn secondary">Guardar rascunho</button>
+          <button class="btn">Submeter projeto</button>
+          <button class="btn subtle" data-page="teacher-dashboard">Voltar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="org-dashboard" class="page">
+    <div class="dashboard">
+      <aside class="sidebar">
+        <h3>Área da Organização</h3>
+        <button class="active">Minhas necessidades</button>
+        <button>Voluntariado</button>
+        <button>Projetos associados</button>
+        <button>Pedidos de apoio</button>
+        <button>Outputs</button>
+        <button data-page="home">Sair</button>
+      </aside>
+      <div class="content">
+        <div class="section-head">
+          <div><div class="kicker">Organização</div><h2>Minhas necessidades</h2></div>
+          <button class="btn" data-page="org-form">Submeter nova necessidade</button>
+        </div>
+
+        <div class="mock-row">
+          <div><strong>Promover a literacia digital de pessoas idosas</strong><div class="meta">Submetida · 2.º semestre</div></div>
+          <span class="meta">Em análise</span>
+        </div>
+        <div class="mock-row">
+          <div><strong>Melhorar a comunicação institucional</strong><div class="meta">Rascunho · Flexível</div></div>
+          <span class="meta">Rascunho</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="org-form" class="page">
+    <div class="wrap narrow">
+      <div class="form-shell">
+        <div class="kicker">Entidade parceira</div>
+        <h1>Submeta uma Necessidade</h1>
+        <p>Partilhe uma necessidade ou desafio da sua organização que possa ser trabalhado em colaboração com estudantes e docentes da Universidade do Minho.</p>
+        <div class="notice"><strong>Não é necessário apresentar um projeto.</strong> Basta descrever a necessidade identificada e indicar de que forma a sua organização poderá colaborar.</div>
+
+        <div class="form-section">
+          <h2>1. Organização</h2>
+          <div class="form-grid">
+            <div class="field"><label>Nome da organização *</label><input value="Associação Comunitária de Braga" readonly></div>
+            <div class="field"><label>Localidade / concelho *</label><input value="Braga" readonly></div>
+            <div class="field full"><label>Breve descrição da organização *</label><textarea readonly>Associação dedicada à inclusão social e ao apoio comunitário, com atividades dirigidas a pessoas idosas e famílias.</textarea></div>
+          </div>
+          <h3>Pessoa de contacto</h3>
+          <div class="form-grid">
+            <div class="field"><label>Nome *</label><input value="Ana Martins" readonly></div>
+            <div class="field"><label>Função na organização *</label><input value="Coordenadora" readonly></div>
+            <div class="field"><label>Email *</label><input value="ana@associacao.pt" readonly></div>
+            <div class="field"><label>Telefone</label><input value="253 000 000" readonly></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>2. Necessidade ou Desafio</h2>
+          <div class="form-grid">
+            <div class="field full"><label>Título da necessidade *</label><input value="Promover a literacia digital de pessoas idosas"></div>
+            <div class="field full"><label>Descreva a necessidade ou desafio *</label><textarea></textarea></div>
+            <div class="field full"><label>Quem beneficiará desta iniciativa? *</label><textarea></textarea></div>
+            <div class="field full"><label>Que resultado gostaria de alcançar? *</label><textarea></textarea></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>3. Tipo de Apoio Pretendido</h2>
+          <div class="checks">
+            <label><input type="checkbox"> Apoio à gestão ou planeamento</label>
+            <label><input type="checkbox"> Avaliação de impacto</label>
+            <label><input type="checkbox"> Comunicação ou sensibilização</label>
+            <label><input type="checkbox"> Desenvolvimento de solução digital</label>
+            <label><input type="checkbox"> Design ou produção multimédia</label>
+            <label><input type="checkbox"> Diagnóstico ou investigação</label>
+            <label><input type="checkbox" checked> Formação ou capacitação</label>
+            <label><input type="checkbox"> Intervenção educativa ou comunitária</label>
+            <label><input type="checkbox"> Organização de atividades ou eventos</label>
+            <label><input type="checkbox"> Não sabemos ainda — gostaríamos de receber sugestões</label>
+            <label><input type="checkbox"> Outro</label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>4. Objetivos de Desenvolvimento Sustentável</h2>
+          <p class="hint">Selecione até 3 ODS.</p>
+          <div class="checks">
+            <label><input type="checkbox"> ODS 1 — Erradicar a Pobreza</label>
+            <label><input type="checkbox"> ODS 3 — Saúde de Qualidade</label>
+            <label><input type="checkbox" checked> ODS 4 — Educação de Qualidade</label>
+            <label><input type="checkbox" checked> ODS 10 — Reduzir as Desigualdades</label>
+            <label><input type="checkbox"> ODS 11 — Cidades e Comunidades Sustentáveis</label>
+            <label><input type="checkbox"> Não sei — gostaria que a plataforma sugerisse os ODS mais adequados.</label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>5. Disponibilidade para Colaborar</h2>
+          <div class="checks">
+            <label><input type="checkbox"> A definir em conjunto</label>
+            <label><input type="checkbox" checked> Contacto pontual com os estudantes</label>
+            <label><input type="checkbox"> Receção de estudantes na organização/comunidade</label>
+            <label><input type="checkbox"> Sem contacto direto com os estudantes</label>
+          </div>
+          <div class="field full" style="margin-top:14px"><label>Observações sobre a disponibilidade</label><textarea></textarea></div>
+        </div>
+
+        <div class="form-section">
+          <h2>6. Informação e Recursos</h2>
+          <div class="field full"><label>Que informação ou materiais poderá disponibilizar?</label><textarea></textarea></div>
+          <p><strong>Recursos adicionais necessários</strong></p>
+          <div class="checks">
+            <label><input type="checkbox"> Apoio financeiro</label>
+            <label><input type="checkbox"> Equipamentos</label>
+            <label><input type="checkbox"> Espaços</label>
+            <label><input type="checkbox"> Materiais</label>
+            <label><input type="checkbox"> Software ou licenças</label>
+            <label><input type="checkbox"> Transporte</label>
+            <label><input type="checkbox"> Não sabemos ainda</label>
+            <label><input type="checkbox"> Outro</label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>7. Disponibilidade Temporal</h2>
+          <div class="field"><label>Quando seria mais adequado desenvolver esta iniciativa? *</label>
+            <select>
+              <option>1.º semestre — setembro a janeiro</option>
+              <option selected>2.º semestre — fevereiro a junho</option>
+              <option>Anual</option>
+              <option>Flexível</option>
+              <option>Sem preferência</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>8. Informação Adicional</h2>
+          <div class="field full"><label>Existe alguma outra informação importante?</label><textarea></textarea></div>
+        </div>
+
+        <div class="form-section">
+          <h2>9. Privacidade e Submissão</h2>
+          <p class="hint">Os dados fornecidos serão utilizados pela Universidade do Minho para analisar a necessidade apresentada, identificar possibilidades de colaboração e estabelecer contacto para o desenvolvimento de um eventual projeto de Aprendizagem-Serviço.</p>
+          <div class="checks"><label><input type="checkbox"> Li e compreendi a Informação sobre Privacidade e Tratamento de Dados. *</label></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn secondary">Guardar rascunho</button>
+          <button class="btn">Submeter necessidade</button>
+          <button class="btn subtle" data-page="org-dashboard">Voltar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">UMinho Fora de Portas · Protótipo navegável sem backend</div>
+</footer>
+
+<script>
+const pages=[...document.querySelectorAll('.page')];
+function showPage(id){
+  pages.forEach(p=>p.classList.toggle('active',p.id===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-page]').forEach(el=>{
+  el.addEventListener('click',e=>{
+    e.preventDefault();
+    showPage(el.dataset.page);
+  });
+});
+
+const cards=[...document.querySelectorAll('.profile-card')];
+const panels={
+  student:document.getElementById('reg-student'),
+  teacher:document.getElementById('reg-teacher'),
+  org:document.getElementById('reg-org')
+};
+cards.forEach(card=>{
+  card.addEventListener('click',()=>{
+    cards.forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    Object.entries(panels).forEach(([k,p])=>p.classList.toggle('hidden',k!==card.dataset.profile));
+  });
+});
+
+document.getElementById('fake-create').addEventListener('click',()=>{
+  document.getElementById('create-success').style.display='block';
+});
+
+document.getElementById('open-need').addEventListener('click',()=>{
+  document.getElementById('need-detail').classList.toggle('hidden');
+});
+
+document.getElementById('compare-ai').addEventListener('click',e=>{
+  e.preventDefault();
+  document.getElementById('ai-compare').classList.toggle('hidden');
+});
+
+document.querySelectorAll('.more-info-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const info = button.nextElementSibling;
+    info.classList.toggle('hidden');
+
+    button.textContent = info.classList.contains('hidden')
+      ? 'Mais informações'
+      : 'Menos informações';
+  });
+});
+</script>
+</body>
+</html>
